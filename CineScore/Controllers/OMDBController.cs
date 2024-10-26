@@ -15,7 +15,7 @@ namespace CineScore.Controllers
         {
             try
             {
-                Log.Information($"Get by id: {id}");
+                Log.Information($"Get by id: {id} [{Environment.MachineName}] [{Environment.UserName}]");
                 var result = await _service.GetMovieById(id);
                 if (!string.IsNullOrEmpty(result.ImdbId))
                     return new OkObjectResult(result);
