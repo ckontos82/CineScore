@@ -26,6 +26,8 @@ namespace CineScore.Services
             Log.Information($"Get by id: {id}");
             var requestUri = $"{uri}&i={id}";
             var response = await _httpClient.GetAsync(requestUri);
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                throw new UnauthorizedAccessException("Invalid OMDB API key");
 
             var content = await response.Content.ReadAsStringAsync();
             var movie = JsonSerializer.Deserialize<Movie>(content);
@@ -38,6 +40,8 @@ namespace CineScore.Services
             Log.Information($"Get by title: {title}");
             var requestUri = $"{uri}&t={title}";
             var response = await _httpClient.GetAsync(requestUri);
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                throw new UnauthorizedAccessException("Invalid OMDB API key");
 
             var content = await response.Content.ReadAsStringAsync();
             var movie = JsonSerializer.Deserialize<Movie>(content);
