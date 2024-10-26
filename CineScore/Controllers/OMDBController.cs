@@ -10,7 +10,7 @@ namespace CineScore.Controllers
     {
         private readonly IOmdbService _service = service;
 
-        [HttpGet]
+        [HttpGet("movie")]
         public async Task<IActionResult> GetMovieById([FromQuery]string? id, [FromQuery] string? title)
         {
             try
