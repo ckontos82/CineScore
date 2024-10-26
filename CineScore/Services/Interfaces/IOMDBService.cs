@@ -4,6 +4,5 @@ namespace CineScore.Services;
 
 public interface IOmdbService
 {
-    Task<Movie> GetMovieById(string id);
-    Task<Movie> GetMovieByTitle(string title);
+    Task<Movie> GetMovie(string queryValue, bool isById = true);
 }

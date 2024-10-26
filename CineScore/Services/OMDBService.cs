@@ -18,25 +18,15 @@ namespace CineScore.Services
             _uri = $"{config.BaseUri}?apikey={config.OmdbKey}";
         }
 
-        public async Task<Movie> GetMovieById(string id)
+        public async Task<Movie> GetMovie(string queryValue, bool isById = true)
         {
-            Log.Information($"Get by id: {id}");
-            var requestUri = $"{_uri}&i={id}";
+            Log.Information($"Get by {(isById ? "ID" : "title")}: {queryValue}");
+
+            var queryParam = isById ? "i" : "t";
+            var requestUri = $"{_uri}&{queryParam}={queryValue}";
+
             var response = await _httpClient.GetAsync(requestUri);
-            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                throw new UnauthorizedAccessException("Invalid OMDB API key");
 
-            var content = await response.Content.ReadAsStringAsync();
-            var movie = JsonSerializer.Deserialize<Movie>(content);
-
-            return movie;
-        }
-
-        public async Task<Movie> GetMovieByTitle(string title)
-        {
-            Log.Information($"Get by title: {title}");
-            var requestUri = $"{_uri}&t={title}";
-            var response = await _httpClient.GetAsync(requestUri);
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 throw new UnauthorizedAccessException("Invalid OMDB API key");
 
