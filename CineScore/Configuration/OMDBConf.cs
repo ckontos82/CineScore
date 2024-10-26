@@ -1,8 +1,8 @@
 ﻿namespace CineScore.Configuration
 {
-    public class OMDBConf
+    public class OmdbConf
     {
-        public string OMDB_Key { get; set; }
+        public string OmdbKey { get; set; }
         public string BaseUri { get; set; }
     }
 }

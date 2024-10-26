@@ -1,4 +1,4 @@
 {
-  "OMDB_Key": "Change_Me",
+  "OmdbKey": "ChangeMe",
   "BaseUri": "http://www.omdbapi.com/"
 }

@@ -6,9 +6,9 @@ namespace CineScore.Controllers
 {
     [ApiController]
     [Route("/api/[controller]")]
-    public class OMDBController(OMDBService service) : ControllerBase
+    public class OmdbController(IOmdbService service) : ControllerBase
     {
-        private readonly OMDBService _service = service;
+        private readonly IOmdbService _service = service;
 
         [HttpGet]
         public async Task<IActionResult> GetMovieById([FromQuery]string? id, [FromQuery] string? title)
