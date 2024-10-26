@@ -30,10 +30,16 @@ app.UseAuthorization();
 app.MapControllers();
 
 Log.Logger = new LoggerConfiguration()
-           .MinimumLevel.Debug()
-           .WriteTo.Console()
-           .WriteTo.File("logs/cinescore.txt", fileSizeLimitBytes: 5242880, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit:true)
-           .CreateLogger();
+                .Enrich.WithEnvironmentUserName()
+                .MinimumLevel.Debug()
+            .WriteTo.Console(
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{EnvironmentUserName}] {Message:lj}{NewLine}{Exception}")
+            .WriteTo.File("logs/cinescore.txt",
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{EnvironmentUserName}] {Message:lj}{NewLine}{Exception}", 
+                fileSizeLimitBytes: 5242880, 
+                rollingInterval: RollingInterval.Day, 
+                rollOnFileSizeLimit:true)
+            .CreateLogger();
 
 Log.Information("App has started");
 

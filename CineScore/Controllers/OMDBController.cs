@@ -10,38 +10,20 @@ namespace CineScore.Controllers
     {
         private readonly OMDBService _service = service;
 
-        [HttpGet("byid/{id}")]
-        public async Task<IActionResult> GetMovieById(string id)
+        [HttpGet]
+        public async Task<IActionResult> GetMovieById([FromQuery]string? id, [FromQuery] string? title)
         {
             try
             {
-                Log.Information($"Get by id: {id} [{Environment.MachineName}] [{Environment.UserName}]");
+                var result = (id, title) switch
+                {
+                    (not null, null) => await _service.GetMovieById(id),
+                    (null, not null) => await _service.GetMovieByTitle(title),
+                    _ => null
+                };
 
-                var result = await _service.GetMovieById(id);
-                if (!string.IsNullOrEmpty(result.ImdbId))
-                    return new OkObjectResult(result);
-
-                return new NotFoundObjectResult("Not found");
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-                return new BadRequestObjectResult(ex.Message);
-            }
-        }
-
-        [HttpGet("bytitle/{title}")]
-        public async Task<IActionResult> GetMovieByTitle(string title)
-        {
-            try
-            {
-                Log.Information($"Get by title: {title} [{Environment.MachineName}] [{Environment.UserName}]");
-
-                var result = await _service.GetMovieByTitle(title);
-                if (!string.IsNullOrEmpty(result.ImdbId))
-                    return new OkObjectResult(result);
-
-                return new NotFoundObjectResult("Not found");
+                return result == null ? new BadRequestObjectResult("Please provide either 'id' or 'title' query parameter.")
+                    : string.IsNullOrEmpty(result.ImdbId) ? new NotFoundObjectResult("Movie not found") : new OkObjectResult(result);
             }
             catch (Exception ex)
             {

@@ -2,6 +2,7 @@
 using CineScore.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Serilog;
 using System.Net.Http;
 using System.Text.Json;
 
@@ -22,6 +23,7 @@ namespace CineScore.Services
 
         public async Task<Movie> GetMovieById(string id)
         {
+            Log.Information($"Get by id: {id}");
             var requestUri = $"{uri}&i={id}";
             var response = await _httpClient.GetAsync(requestUri);
 
@@ -33,6 +35,7 @@ namespace CineScore.Services
 
         public async Task<Movie> GetMovieByTitle(string title)
         {
+            Log.Information($"Get by title: {title}");
             var requestUri = $"{uri}&t={title}";
             var response = await _httpClient.GetAsync(requestUri);
 
