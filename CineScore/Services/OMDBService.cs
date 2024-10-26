@@ -20,10 +20,20 @@ namespace CineScore.Services
             uri = $"{_config.BaseUri}?apikey={_config.OMDB_Key}";
         }
 
-        public async Task<Movie> GetMovieById(string Id)
+        public async Task<Movie> GetMovieById(string id)
         {
-            var requestUri = $"{uri}&i={Id}";
+            var requestUri = $"{uri}&i={id}";
+            var response = await _httpClient.GetAsync(requestUri);
 
+            var content = await response.Content.ReadAsStringAsync();
+            var movie = JsonSerializer.Deserialize<Movie>(content);
+
+            return movie;
+        }
+
+        public async Task<Movie> GetMovieByTitle(string title)
+        {
+            var requestUri = $"{uri}&t={title}";
             var response = await _httpClient.GetAsync(requestUri);
 
             var content = await response.Content.ReadAsStringAsync();
