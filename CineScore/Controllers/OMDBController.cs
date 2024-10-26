@@ -28,7 +28,7 @@ namespace CineScore.Controllers
             catch (Exception ex)
             {
                 Log.Error(ex.Message);
-                return new BadRequestObjectResult(ex.Message);
+                return new BadRequestObjectResult("An error occurred.");
             }
         }
     }
