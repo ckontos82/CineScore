@@ -12,6 +12,15 @@ A REST api that fetches data from omdb.
 
 - [ ] Add more methods for fetching data and storing them in local db
 
-- [ ] Add users and authorization
+- [X] Add users and authorization
 
 ***Important: You must change the value of ```OMDB_Key``` in ```OMDBConf.json``` file for the app to run.***
+
+**Note: OAuth authentication has been added. Since it is a project for demo purposes, the values for the OAuth token are these:**
+
+|Key|Value|
+|:--|--:|
+|Grant Type|```Client Credentials```|
+|Client Id|```client```|
+|Client Secret|```secret```|
+|Scope|```Api1```
