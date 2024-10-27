@@ -21,7 +21,7 @@ builder.Services.AddHttpClient<IOmdbService, OmdbService>();
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Cine Score", Version = "v1" });
 
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
