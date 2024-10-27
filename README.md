@@ -16,11 +16,5 @@ A REST api that fetches data from omdb.
 
 ***Important: You must change the value of ```OMDB_Key``` in ```OMDBConf.json``` file for the app to run.***
 
-**Note: OAuth authentication has been added. Since it is a project for demo purposes, the values for the OAuth token are these:**
+**Note: OAuth authentication has been added.**
 
-|Key|Value|
-|:--|--:|
-|Grant Type|```Client Credentials```|
-|Client Id|```client```|
-|Client Secret|```secret```|
-|Scope|```Api1```
