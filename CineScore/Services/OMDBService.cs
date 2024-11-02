@@ -2,6 +2,8 @@
 using CineScore.Models;
 using Microsoft.Extensions.Options;
 using Serilog;
+using Serilog.Context;
+using Serilog.Core;
 using System.Text.Json;
 
 namespace CineScore.Services
@@ -20,7 +22,9 @@ namespace CineScore.Services
 
         public async Task<Movie> GetMovie(string queryValue, bool isById = true)
         {
-            Log.Information($"Get by {(isById ? "ID" : "title")}: {queryValue}");
+            using (LogContext.PushProperty("Username", Environment.UserName))
+            using (LogContext.PushProperty($"Machine", Environment.MachineName))
+                Log.Information($"Get by {(isById ? "ID" : "title")}: {queryValue}");
 
             var queryParam = isById ? "i" : "t";
             var requestUri = $"{_uri}&{queryParam}={queryValue}";

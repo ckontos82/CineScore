@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Serilog.Context;
 
 namespace CineScore.Controllers
 {
@@ -29,7 +30,9 @@ namespace CineScore.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                using (LogContext.PushProperty("Username", Environment.UserName))
+                using (LogContext.PushProperty($"Machine", Environment.MachineName))
+                    Log.Fatal(ex.Message);
                 return new BadRequestObjectResult("An error occurred.");
             }
         }
