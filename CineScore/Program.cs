@@ -75,7 +75,7 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .MinimumLevel.Debug()
     .WriteTo.Console(
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{Machine}/{Username}] {Message:lj}{NewLine}{Exception}")
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{Machine}/{Username}] {Message:lj}")
     .WriteTo.File("logs/cinescore.txt",
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{Machine}/{Username}] {Message:lj}{NewLine}{Exception}",
         fileSizeLimitBytes: 5242880,
