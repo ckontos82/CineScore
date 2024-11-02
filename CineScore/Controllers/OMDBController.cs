@@ -32,7 +32,7 @@ namespace CineScore.Controllers
             {
                 using (LogContext.PushProperty("Username", Environment.UserName))
                 using (LogContext.PushProperty($"Machine", Environment.MachineName))
-                    Log.Fatal(ex.Message);
+                    Log.Error(ex.Message);
                 return new BadRequestObjectResult("An error occurred.");
             }
         }

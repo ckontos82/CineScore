@@ -3,10 +3,14 @@ using CineScore.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Serilog.Context;
+using Serilog.Sinks.MSSqlServer;
+using System.Collections.ObjectModel;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("OMDBConf.json", optional: false, reloadOnChange: true);
+builder.Services.Configure<OmdbConf>(builder.Configuration);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -16,7 +20,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();
 
-builder.Services.Configure<OmdbConf>(builder.Configuration);
 builder.Services.AddHttpClient<IOmdbService, OmdbService>();
 
 builder.Services.AddSwaggerGen(options =>
@@ -66,6 +69,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+var connectionString = @"Server=(localdb)\mssqllocaldb;Database=LoggingDB;Trusted_Connection=True;";
+
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .MinimumLevel.Debug()
@@ -76,8 +81,28 @@ Log.Logger = new LoggerConfiguration()
         fileSizeLimitBytes: 5242880,
         rollingInterval: RollingInterval.Day,
         rollOnFileSizeLimit: true)
+    .WriteTo.MSSqlServer(
+        connectionString: connectionString,
+        sinkOptions: new MSSqlServerSinkOptions
+        {
+            TableName = "CineScoreLogs",
+            AutoCreateSqlTable = true,
+        },
+        columnOptions: new ColumnOptions
+        {
+            AdditionalColumns = new Collection<SqlColumn>
+            {
+                new SqlColumn
+                {ColumnName = "EnvironmentUserName", PropertyName = "Username" },
+
+                 new SqlColumn
+                {ColumnName = "MachineName", PropertyName = "Machine" }
+            }
+        })            
     .CreateLogger();
 
-Log.Information("App has started");
+using (LogContext.PushProperty("Username", Environment.UserName))
+using (LogContext.PushProperty($"Machine", Environment.MachineName))
+    Log.Information("App has started");
 
 app.Run();
