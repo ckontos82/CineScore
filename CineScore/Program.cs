@@ -1,6 +1,8 @@
 ﻿using CineScore.Configuration;
+using CineScore.Data;
 using CineScore.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Context;
@@ -18,6 +20,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.Authority = "https://localhost:5001"; 
         options.Audience = "api1";
     });
+
+builder.Services.AddDbContext<ApplicationDbContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddHttpClient<IOmdbService, OmdbService>();
@@ -74,13 +80,6 @@ var connectionString = @"Server=(localdb)\mssqllocaldb;Database=LoggingDB;Truste
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .MinimumLevel.Debug()
-    .WriteTo.Console(
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{Machine}/{Username}] {Message:lj}")
-    .WriteTo.File("logs/cinescore.txt",
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{Machine}/{Username}] {Message:lj}{NewLine}{Exception}",
-        fileSizeLimitBytes: 5242880,
-        rollingInterval: RollingInterval.Day,
-        rollOnFileSizeLimit: true)
     .WriteTo.MSSqlServer(
         connectionString: connectionString,
         sinkOptions: new MSSqlServerSinkOptions
