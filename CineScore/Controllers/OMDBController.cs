@@ -1,4 +1,5 @@
-﻿using CineScore.Services;
+﻿using CineScore.Data;
+using CineScore.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -9,9 +10,10 @@ namespace CineScore.Controllers
     [Authorize]
     [ApiController]
     [Route("/api/[controller]")]
-    public class OmdbController(IOmdbService service) : ControllerBase
+    public class OmdbController(IOmdbService service, ApplicationDbContext context) : ControllerBase
     {
         private readonly IOmdbService _service = service;
+        private readonly ApplicationDbContext _context = context;
 
         [HttpGet("movie")]
         public async Task<IActionResult> GetMovie([FromQuery]string? id, [FromQuery] string? title)
